@@ -1,0 +1,24 @@
+@model Attendee
+
+@{
+    ViewData["Title"] = "New Attendee";
+    var FormView = new
+    {
+        FormData = new
+        {
+            Name = new { type = "text", value = "" },
+            Email = new { type = "email", value = "" }
+        },
+        Btn = "Add"
+    };
+}
+
+<h3 class="my-5">@ViewData["Title"]</h3>
+
+<partial name="_FormViewForModels" model="FormView" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,28 @@
+@model Event
+
+@{
+    ViewData["Title"] = "New Event";
+    var FormView = new
+    {
+        FormData = new
+        {
+            Name = new { type = "text", value = "" },
+            Location = new { type = "text", value = "" },
+            StartDate = new { type = "datetime-local", value = "" },
+            EndDate = new { type = "datetime-local", value = "" },
+            Orgnizer = new { type = "text", value = "", require = false },
+            Description = new { type = "textarea", value = "", require = false }
+        },
+        Btn = "Add"
+    };
+}
+
+<h3 class="my-5">@ViewData["Title"]</h3>
+
+<partial name="_FormViewForModels" model="FormView" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

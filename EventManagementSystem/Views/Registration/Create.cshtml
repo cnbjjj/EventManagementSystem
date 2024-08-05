@@ -1,0 +1,26 @@
+@model Registration
+
+@{
+    ViewData["Title"] = "New Registration";
+    var FormView = new
+    {
+        FormData = new
+        {
+            EventId = new { type = "dropdown", value = new SelectList(ViewBag.Events, "Id", "Name") },
+            AttendeeId = new { type = "dropdown", value = new SelectList(ViewBag.Attendees, "Id", "Name") },
+            RegistrationDate = new { type = "date", value = "" },
+            AttendanceDate = new { type = "date", value = "", require = false },
+        },
+        Btn = "Add"
+    };
+}
+
+<h3 class="my-5">@ViewData["Title"]</h3>
+
+<partial name="_FormViewForModels" model="FormView" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

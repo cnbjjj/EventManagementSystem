@@ -1,0 +1,29 @@
+@model Event
+
+@{
+    ViewData["Title"] = "Edit Event";
+    var FormView = new
+    {
+        FormData = new
+        {
+            Id = new { type = "hidden", value = Model.Id },
+            Name = new { type = "text", value = Model.Name },
+            Location = new { type = "text", value = Model.Location },
+            StartDate = new { type = "datetime-local", value = Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss") },
+            EndDate = new { type = "datetime-local", value = Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss") },
+            Organizer = new { type = "text", value = Model.Organizer, require = false },
+            Description = new { type = "textarea", value = Model.Description, require = false }
+        },
+        Btn = "Edit"
+    };
+}
+
+<h3 class="my-5">@ViewData["Title"]</h3>
+
+<partial name="_FormViewForModels" model="FormView" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

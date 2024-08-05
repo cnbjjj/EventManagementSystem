@@ -1,0 +1,62 @@
+@model IEnumerable<Event>
+
+@{
+    ViewData["Title"] = "Events";
+    var DeleteMessage = "Are you sure you want to delete the record?";
+}
+
+<div class="d-flex justify-content-between align-content-center align-items-center">
+    <h3 class="my-5">@ViewData["Title"]</h3>
+    <a href="@Url.Action("Create")" class="btn btn-success sbtn">New</a>
+</div>
+<table class="table ps-0">
+    <thead>
+        <tr class="p-3 d-flex mb-2 align-items-center bg-light">
+            <th>
+                <b>Id</b>
+            </th>
+            <th>
+                <b>Name</b>
+            </th>
+            <th>
+                <b>Location</b>
+            </th>
+            <th>
+                <b>Start Date</b>
+            </th>
+            <th>
+                <b>End Date</b>
+            </th>
+            <th>
+                <b>Actions</b>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="p-3 d-flex align-items-center mb-2">
+                <td>
+                    <b>#@item.Id</b>
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Location
+                </td>
+                <td>
+                    @item.StartDate
+                </td>
+                <td>
+                    @item.EndDate
+                </td>
+                <td class="btn-group">
+                    <a href="@Url.Action("Edit",new{id=@item.Id})" class="btn btn-success bi bi-pencil"></a>
+                    <a href="@Url.Action("Delete",new{id=@item.Id})" class="btn btn-danger bi bi-trash3" onclick="return deleteItem(this.href)" data-bs-toggle="modal" data-bs-target="#confirmModal"></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="_ConfirmModal" model="DeleteMessage" />

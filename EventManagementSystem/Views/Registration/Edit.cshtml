@@ -1,0 +1,27 @@
+@model Registration
+
+@{
+    ViewData["Title"] = "Edit Registration";
+    var FormView = new 
+    {
+        FormData = new 
+        {
+            RegistrationId= new {type="hidden",value=Model.RegistrationId},
+            EventId = new { type = "dropdown", value = new SelectList(ViewBag.Events, "Id", "Name", Model.EventId) },
+            AttendeeId = new { type = "dropdown", value = new SelectList(ViewBag.Attendees, "Id", "Name", Model.AttendeeId) },
+            RegistrationDate = new { type = "date", value = Model.RegistrationDate.ToString("yyyy-MM-dd") },
+            AttendanceDate = new { type = "date", value = Model.AttendanceDate?.ToString("yyyy-MM-dd"), require = false }
+        },
+        Btn = "Edit"
+    };
+}
+
+<h3 class="my-5">@ViewData["Title"]</h3>
+
+<partial name="_FormViewForModels" model="FormView" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
