@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - event-management-system
+name: Build and deploy ASP.Net Core app to Azure Web App - product-management-system
 
 on:
   push:
@@ -21,17 +18,31 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Add dotnet tools to PATH
+        run: echo "${{ runner.tool_cache }}/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Restore dependencies
+        run: dotnet restore ./EventManagementSystem/EventManagementSystem.sln
+
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ./EventManagementSystem/EventManagementSystem.sln --configuration Release
+
+      - name: Apply migrations
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        run: dotnet ef database update --startup-project ./EventManagementSystem/EventManagementSystem.csproj --project ./EventManagementSystem.DAL/EventManagementSystem.DAL.csproj
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./EventManagementSystem/EventManagementSystem.sln -c Release -o "${{runner.temp}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{runner.temp}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -51,15 +62,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7A2E4E3288324C36B20E52CB637045C1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4BA09044CE7945398A5D5692C04F4461 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EF1A7E5B37C44A00819D96AC49838057 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_627502C4010342CA8197E6CB4A1C6CF9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0E88DDC6883C48319CC5B92933F72C4E }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_04DE257E569A4A7CAACCA9967CCD3316 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'event-management-system'
+          app-name: 'product-management-system'
           slot-name: 'Production'
           package: .
-          
